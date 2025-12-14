@@ -58,9 +58,11 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="h-screen bg-gray-100 flex flex-col font-sans overflow-hidden">
-      {/* Top Main Header */}
-      <div className="flex-none z-50 relative">
+    // Use 100dvh for better mobile browser support (addresses address bar resize issues)
+    <div className="h-[100dvh] w-full bg-gray-100 flex flex-col font-sans overflow-hidden">
+      
+      {/* Top Main Header - Hidden on Mobile to save space and prevent layout issues */}
+      <div className="flex-none z-30 relative hidden md:block shadow-md">
         <Header />
       </div>
       
@@ -69,7 +71,7 @@ const App: React.FC = () => {
         {/* Mobile Sidebar Overlay */}
         {isMobileMenuOpen && (
           <div 
-            className="fixed inset-0 bg-black/50 z-20 md:hidden transition-opacity"
+            className="fixed inset-0 bg-black/50 z-40 md:hidden transition-opacity backdrop-blur-sm"
             onClick={() => setIsMobileMenuOpen(false)}
           />
         )}
@@ -77,15 +79,20 @@ const App: React.FC = () => {
         {/* Sidebar Navigation */}
         <aside 
           className={`
-            bg-gray-900 text-white w-64 flex-shrink-0 flex flex-col transition-transform duration-300 ease-in-out z-30 shadow-2xl
-            absolute inset-y-0 left-0 md:static md:translate-x-0 h-full
+            bg-gray-900 text-white w-72 md:w-64 flex-shrink-0 flex flex-col transition-transform duration-300 ease-in-out z-50 shadow-2xl
+            absolute inset-y-0 left-0 md:static md:translate-x-0 h-full border-r border-gray-800
             ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}
           `}
         >
           {/* Mobile Sidebar Header */}
           <div className="p-4 border-b border-gray-800 flex justify-between items-center md:hidden bg-gray-900">
-             <span className="font-bold text-lg text-blue-400">মেনু</span>
-             <button onClick={() => setIsMobileMenuOpen(false)} className="text-gray-400 hover:text-white p-1">
+             <span className="font-bold text-xl text-blue-400 flex items-center gap-2">
+                <span className="bg-blue-600 text-white p-1 rounded">GTTC</span> মেনু
+             </span>
+             <button 
+               onClick={() => setIsMobileMenuOpen(false)} 
+               className="text-gray-400 hover:text-white p-2 rounded-full hover:bg-gray-800 transition-colors"
+             >
                <X size={24} />
              </button>
           </div>
@@ -122,31 +129,35 @@ const App: React.FC = () => {
           
           <div className="p-4 border-t border-gray-800 text-xs text-gray-500 text-center">
             <div className="flex justify-center items-center gap-1 mb-2 text-gray-600">
-               <LogOut size={12}/> V 1.0.1
+               <LogOut size={12}/> V 1.0.2
             </div>
             Developed for GTTC
           </div>
         </aside>
 
         {/* Main Content Area */}
-        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50 w-full relative">
+        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50 w-full relative scroll-smooth">
           
-          {/* Mobile Header Bar */}
-          <div className="md:hidden sticky top-0 z-10 bg-white shadow-sm border-b border-gray-200 px-4 py-3 flex items-center gap-3">
-             <button 
-                onClick={() => setIsMobileMenuOpen(true)}
-                className="p-2 -ml-2 rounded-md text-gray-600 hover:bg-gray-100 hover:text-blue-600 transition-colors"
-             >
-                <Menu size={24} />
-             </button>
-             <h2 className="font-bold text-gray-800 text-lg truncate">
-                {menuItems.find(i => i.id === activeTab)?.label}
-             </h2>
+          {/* Mobile Header Bar - Sticky & Enhanced */}
+          <div className="md:hidden sticky top-0 z-30 bg-white/95 backdrop-blur-md shadow-sm border-b border-gray-200 px-4 py-3 flex items-center justify-between">
+             <div className="flex items-center gap-3">
+                 <button 
+                    onClick={() => setIsMobileMenuOpen(true)}
+                    className="p-2 -ml-2 rounded-lg text-gray-600 hover:bg-gray-100 hover:text-blue-600 transition-colors"
+                 >
+                    <Menu size={24} />
+                 </button>
+                 <h2 className="font-bold text-gray-800 text-lg truncate flex items-center gap-2">
+                    <span className="text-blue-600 font-extrabold">GTTC</span>
+                    <span className="text-gray-300 text-xl font-light">|</span>
+                    <span>{menuItems.find(i => i.id === activeTab)?.label}</span>
+                 </h2>
+             </div>
           </div>
 
           {/* Content Container */}
-          <div className="p-4 md:p-8 max-w-7xl mx-auto min-h-full">
-            <div className="animate-fade-in pb-10">
+          <div className="p-4 md:p-8 max-w-7xl mx-auto min-h-full pb-20 md:pb-10">
+            <div className="animate-fade-in">
               {renderContent()}
             </div>
           </div>
