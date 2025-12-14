@@ -1,167 +1,58 @@
-import React, { useState } from 'react';
-import { Header } from './components/Header';
-import { Dashboard } from './components/Dashboard';
-import { AdmissionForm } from './components/AdmissionForm';
-import { PaymentForm } from './components/PaymentForm';
-import { StudentList } from './components/StudentList';
-import { ExpenseManager } from './components/ExpenseManager';
-import { DataBackup } from './components/DataBackup';
-import { useStudents } from './hooks/useStudents';
-import { TabType } from './types';
-import { 
-  UserPlus, 
-  CreditCard, 
-  Database, 
-  TrendingDown, 
-  LayoutDashboard, 
-  Menu,
-  X,
-  LogOut,
-  Settings
-} from 'lucide-react';
+import React from 'react';
+import { Wrench, Star } from 'lucide-react';
 
 const App: React.FC = () => {
-  const { 
-    students, 
-    expenses, 
-    addStudent, 
-    addPayment, 
-    deleteStudent, 
-    addExpense, 
-    deleteExpense,
-    importData,
-    resetData 
-  } = useStudents();
-
-  const [activeTab, setActiveTab] = useState<TabType>('dashboard');
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
-  const menuItems = [
-    { id: 'dashboard', label: 'ড্যাশবোর্ড', icon: <LayoutDashboard size={20} /> },
-    { id: 'admission', label: 'নতুন ভর্তি', icon: <UserPlus size={20} /> },
-    { id: 'payment', label: 'টাকা জমা', icon: <CreditCard size={20} /> },
-    { id: 'expense', label: 'খরচ হিসাব', icon: <TrendingDown size={20} /> },
-    { id: 'database', label: 'ছাত্র তালিকা', icon: <Database size={20} /> },
-    { id: 'settings', label: 'ডেটা ব্যাকআপ', icon: <Settings size={20} /> },
-  ];
-
-  const renderContent = () => {
-    switch(activeTab) {
-      case 'dashboard': return <Dashboard students={students} expenses={expenses} />;
-      case 'admission': return <AdmissionForm onAddStudent={addStudent} students={students} />;
-      case 'payment': return <PaymentForm onAddPayment={addPayment} students={students} />;
-      case 'expense': return <ExpenseManager expenses={expenses} onAddExpense={addExpense} onDeleteExpense={deleteExpense} />;
-      case 'database': return <StudentList students={students} onDelete={deleteStudent} />;
-      case 'settings': return <DataBackup students={students} expenses={expenses} onImport={importData} onReset={resetData} />;
-      default: return <Dashboard students={students} expenses={expenses} />;
-    }
-  };
-
   return (
-    // Use 100dvh for better mobile browser support (addresses address bar resize issues)
-    <div className="h-[100dvh] w-full bg-gray-100 flex flex-col font-sans overflow-hidden">
+    <div className="min-h-screen w-full bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 flex flex-col items-center justify-center text-white p-6 overflow-hidden relative">
       
-      {/* Top Main Header - Hidden on Mobile to save space and prevent layout issues */}
-      <div className="flex-none z-30 relative hidden md:block shadow-md">
-        <Header />
-      </div>
-      
-      <div className="flex flex-1 overflow-hidden relative">
+      {/* Background Decorative Elements */}
+      <div className="absolute top-10 left-10 w-72 h-72 bg-blue-600 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-pulse"></div>
+      <div className="absolute bottom-10 right-10 w-72 h-72 bg-purple-600 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-pulse"></div>
+
+      <div className="z-10 flex flex-col items-center text-center space-y-8 max-w-3xl">
         
-        {/* Mobile Sidebar Overlay */}
-        {isMobileMenuOpen && (
-          <div 
-            className="fixed inset-0 bg-black/50 z-40 md:hidden transition-opacity backdrop-blur-sm"
-            onClick={() => setIsMobileMenuOpen(false)}
-          />
-        )}
-
-        {/* Sidebar Navigation */}
-        <aside 
-          className={`
-            bg-gray-900 text-white w-72 md:w-64 flex-shrink-0 flex flex-col transition-transform duration-300 ease-in-out z-50 shadow-2xl
-            absolute inset-y-0 left-0 md:static md:translate-x-0 h-full border-r border-gray-800
-            ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}
-          `}
-        >
-          {/* Mobile Sidebar Header */}
-          <div className="p-4 border-b border-gray-800 flex justify-between items-center md:hidden bg-gray-900">
-             <span className="font-bold text-xl text-blue-400 flex items-center gap-2">
-                <span className="bg-blue-600 text-white p-1 rounded">GTTC</span> মেনু
-             </span>
-             <button 
-               onClick={() => setIsMobileMenuOpen(false)} 
-               className="text-gray-400 hover:text-white p-2 rounded-full hover:bg-gray-800 transition-colors"
-             >
-               <X size={24} />
-             </button>
+        {/* Logo / Icon Area */}
+        <div className="relative group">
+          <div className="absolute -inset-1 bg-gradient-to-r from-yellow-400 to-orange-600 rounded-full blur opacity-25 group-hover:opacity-75 transition duration-1000 group-hover:duration-200"></div>
+          <div className="relative p-8 bg-white/10 backdrop-blur-xl rounded-full border border-white/10 shadow-2xl">
+            <Wrench size={80} className="text-yellow-400 drop-shadow-lg" />
           </div>
+        </div>
 
-          {/* Desktop Sidebar Title */}
-          <div className="p-6 border-b border-gray-800 hidden md:block">
-            <h2 className="text-xl font-bold text-blue-400 tracking-wide">মেইন মেনু</h2>
+        {/* Text Content */}
+        <div className="space-y-4">
+          <div className="flex items-center justify-center gap-2 text-yellow-400 font-medium tracking-wider uppercase text-sm">
+            <Star size={16} fill="currentColor" />
+            <span>অফিসিয়াল পোর্টাল</span>
+            <Star size={16} fill="currentColor" />
           </div>
           
-          {/* Menu Items */}
-          <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
-            {menuItems.map((item) => (
-              <button
-                key={item.id}
-                onClick={() => {
-                  setActiveTab(item.id as TabType);
-                  setIsMobileMenuOpen(false);
-                }}
-                className={`
-                  w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 font-medium group
-                  ${activeTab === item.id 
-                    ? 'bg-blue-600 text-white shadow-lg translate-x-1' 
-                    : 'text-gray-400 hover:bg-gray-800 hover:text-white hover:translate-x-1'
-                  }
-                `}
-              >
-                <span className={`${activeTab === item.id ? 'text-white' : 'text-gray-400 group-hover:text-white'}`}>
-                  {item.icon}
-                </span>
-                {item.label}
-              </button>
-            ))}
-          </nav>
+          <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight leading-tight">
+            স্বাগতম
+          </h1>
           
-          <div className="p-4 border-t border-gray-800 text-xs text-gray-500 text-center">
-            <div className="flex justify-center items-center gap-1 mb-2 text-gray-600">
-               <LogOut size={12}/> V 1.0.4
-            </div>
-            Developed for GTTC
-          </div>
-        </aside>
+          <h2 className="text-2xl md:text-4xl font-light text-blue-200">
+            গুজিয়া টেকনিক্যাল ট্রেনিং সেন্টার
+          </h2>
+        </div>
 
-        {/* Main Content Area */}
-        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50 w-full relative scroll-smooth">
-          
-          {/* Mobile Header Bar - Sticky & Enhanced */}
-          <div className="md:hidden sticky top-0 z-30 bg-white/95 backdrop-blur-md shadow-sm border-b border-gray-200 px-4 py-3 flex items-center justify-between">
-             <div className="flex items-center gap-3">
-                 <button 
-                    onClick={() => setIsMobileMenuOpen(true)}
-                    className="p-2 -ml-2 rounded-lg text-gray-600 hover:bg-gray-100 hover:text-blue-600 transition-colors"
-                 >
-                    <Menu size={24} />
-                 </button>
-                 <h2 className="font-bold text-gray-800 text-lg truncate flex items-center gap-2">
-                    <span className="text-blue-600 font-extrabold">GTTC</span>
-                    <span className="text-gray-300 text-xl font-light">|</span>
-                    <span>{menuItems.find(i => i.id === activeTab)?.label}</span>
-                 </h2>
-             </div>
-          </div>
+        {/* Divider */}
+        <div className="w-24 h-1 bg-gradient-to-r from-transparent via-yellow-500 to-transparent rounded-full opacity-50"></div>
 
-          {/* Content Container */}
-          <div className="p-4 md:p-8 max-w-7xl mx-auto min-h-full pb-20 md:pb-10">
-            <div className="animate-fade-in">
-              {renderContent()}
-            </div>
-          </div>
-        </main>
+        <p className="text-gray-400 text-lg max-w-lg mx-auto">
+          দক্ষতা উন্নয়নে ও কারিগরি শিক্ষায় আপনার বিশ্বস্ত প্রতিষ্ঠান।
+        </p>
+
+        {/* Simple Button */}
+        <button className="mt-8 px-10 py-4 bg-white text-blue-900 font-bold rounded-full hover:bg-yellow-400 hover:text-black transition-all duration-300 shadow-lg hover:shadow-yellow-500/20 transform hover:-translate-y-1">
+          শুরু করুন
+        </button>
+
+      </div>
+
+      {/* Footer Copyright */}
+      <div className="absolute bottom-6 text-gray-500 text-sm font-light">
+        &copy; ২০২৪ গুজিয়া টিটিসি | সর্বস্বত্ব সংরক্ষিত
       </div>
     </div>
   );
